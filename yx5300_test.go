@@ -15,7 +15,7 @@ func Test1(t *testing.T) {
 	conn.WriteCommand(CMD_SEL_DEV, DEV_TF, 0)
 	time.Sleep(200 * time.Millisecond)
 
-	conn.WriteCommand(CMD_PLAY_FOLDER_FILE, 1, 1)
+	conn.WriteCommand(CMD_PLAY_W_VOL, 0xf, 2)
 
 	time.Sleep(200 * time.Second)
 }
