@@ -12,10 +12,10 @@ func Test1(t *testing.T) {
 		return
 	}
 
-	conn.WriteCommand(CMD_SEL_DEV, DEV_TF, 0)
+	conn.WriteCommand(CMD_SEL_DEV, 0, DEV_TF)
 	time.Sleep(200 * time.Millisecond)
 
-	conn.WriteCommand(CMD_PLAY_W_VOL, 0xf, 2)
+	conn.WriteCommand(CMD_PLAY_W_VOL, 0x1f, 1)
 
 	time.Sleep(200 * time.Second)
 }

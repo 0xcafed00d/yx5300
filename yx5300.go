@@ -36,7 +36,13 @@ const (
 )
 
 type Connection struct {
-	comms io.ReadWriteCloser
+	comms        io.ReadWriteCloser
+	ResponseChan chan Response
+}
+
+type Response struct {
+	Code  int
+	Param int
 }
 
 func (c *Connection) WriteCommand(cmd, arg1, arg2 byte) {
@@ -54,20 +60,39 @@ func (c *Connection) WriteCommand(cmd, arg1, arg2 byte) {
 	c.comms.Write(buffer[:])
 }
 
-func MakeSerialConnection(devname string, debug bool) (Connection, error) {
+func parseResponses(connection *Connection) {
+	var buffer [1]byte
+	var resp []byte
+
+	for {
+		_, err := connection.comms.Read(buffer[:])
+		if err != nil {
+			panic(err)
+		}
+
+		if buffer[0] == 0x7e {
+			resp = nil
+		}
+		resp = append(resp, buffer[0])
+		if buffer[0] == 0xef {
+			for _, v := range resp {
+				fmt.Printf("%02x ", v)
+			}
+			fmt.Println()
+		}
+	}
+}
+
+func MakeSerialConnection(devname string, debug bool) (*Connection, error) {
 	port, err := serial.OpenPort(&serial.Config{Name: devname, Baud: 9600})
 
-	if err == nil {
-		go func() {
-			var buffer [8]byte
-
-			for {
-				n, _ := port.Read(buffer[:])
-				for i := 0; i < n; i++ {
-					fmt.Printf("%02x ", buffer[i])
-				}
-			}
-		}()
+	connection := &Connection{
+		comms:        port,
+		ResponseChan: make(chan Response, 10),
 	}
-	return Connection{comms: port}, err
+
+	if err == nil {
+		go parseResponses(connection)
+	}
+	return connection, err
 }
