@@ -27,12 +27,19 @@ const (
 	CMD_SET_SINGLE_CYCLE  = 0x19
 	CMD_SET_DAC           = 0x1A
 	CMD_PLAY_W_VOL        = 0x22
+	CMD_QUERY_STATUS      = 0x42
+	CMD_QUERY_FLDR_TRACKS = 0x4e
+	CMD_QUERY_FLDR_COUNT  = 0x4f
 
 	DAC_ON           = 0x00
 	DAC_OFF          = 0x01
 	SINGLE_CYCLE_ON  = 0x00
 	SINGLE_CYCLE_OFF = 0x01
 	DEV_TF           = 0x02
+
+	RESP_MEDIA_REMOVED     = 0x3b
+	RESP_MEDIA_INSERTED    = 0x3a
+	RESP_TF_TRACK_FINISHED = 0x3d
 )
 
 type Connection struct {
@@ -52,7 +59,7 @@ func (c *Connection) WriteCommand(cmd, arg1, arg2 byte) {
 	buffer[1] = 0xff //version
 	buffer[2] = 0x06 //the number of bytes of the command without starting byte and ending byte
 	buffer[3] = cmd
-	buffer[4] = 0x01 //0x00 = no feedback, 0x01 = feedback
+	buffer[4] = 0x00 //0x00 = no feedback, 0x01 = feedback
 	buffer[5] = arg1 //datah
 	buffer[6] = arg2 //datal
 	buffer[7] = 0xef //ending byte

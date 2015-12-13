@@ -1,7 +1,7 @@
 package main
 
 import (
-	"fmt"
+	//"fmt"
 	"github.com/simulatedsimian/yx5300"
 )
 
@@ -10,5 +10,7 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+
+	conn.WriteCommand(CMD_SEL_DEV, 0, DEV_TF)
 
 }
