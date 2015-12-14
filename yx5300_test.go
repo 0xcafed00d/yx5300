@@ -13,19 +13,20 @@ func Test1(t *testing.T) {
 	}
 
 	conn.WriteCommand(CMD_SEL_DEV, 0, DEV_TF)
-	time.Sleep(200 * time.Millisecond)
+	time.Sleep(500 * time.Millisecond)
 
 	conn.WriteCommand(CMD_QUERY_FLDR_COUNT, 0, 0)
-	time.Sleep(200 * time.Millisecond)
+	time.Sleep(500 * time.Millisecond)
 
-	conn.WriteCommand(CMD_QUERY_FLDR_TRACKS, 1, 1)
-	time.Sleep(200 * time.Millisecond)
-	conn.WriteCommand(CMD_QUERY_FLDR_TRACKS, 2, 2)
-	time.Sleep(200 * time.Millisecond)
-	conn.WriteCommand(CMD_QUERY_FLDR_TRACKS, 3, 3)
-	time.Sleep(200 * time.Millisecond)
+	conn.WriteCommand(CMD_QUERY_TOT_TRACKS, 0, 0)
+	time.Sleep(500 * time.Millisecond)
 
-	conn.WriteCommand(CMD_FOLDER_CYCLE, 2, 0)
+	for n := 1; n < 10; n++ {
+		conn.WriteCommand(CMD_QUERY_FLDR_TRACKS, 0, byte(n))
+		time.Sleep(500 * time.Millisecond)
+	}
+
+	conn.WriteCommand(CMD_PLAY_FOLDER_FILE, 5, 2)
 
 	for {
 		time.Sleep(5 * time.Second)

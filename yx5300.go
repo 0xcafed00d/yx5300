@@ -29,6 +29,7 @@ const (
 	CMD_PLAY_W_VOL        = 0x22
 	CMD_QUERY_STATUS      = 0x42
 	CMD_QUERY_FLDR_TRACKS = 0x4e
+	CMD_QUERY_TOT_TRACKS  = 0x48
 	CMD_QUERY_FLDR_COUNT  = 0x4f
 
 	DAC_ON           = 0x00
@@ -40,6 +41,9 @@ const (
 	RESP_MEDIA_REMOVED     = 0x3b
 	RESP_MEDIA_INSERTED    = 0x3a
 	RESP_TF_TRACK_FINISHED = 0x3d
+	RESP_ERROR             = 0x40
+	RESP_ACK               = 0x41
+	RESP_FLDR_TRACK_COUNT  = 0x4e
 )
 
 type Connection struct {
