@@ -52,8 +52,8 @@ type Connection struct {
 }
 
 type Response struct {
-	Code  int
-	Param int
+	Code  uint
+	Param uint
 }
 
 func (c *Connection) WriteCommand(cmd, arg1, arg2 byte) {
@@ -86,6 +86,14 @@ func parseResponses(connection *Connection) {
 		}
 		resp = append(resp, buffer[0])
 		if buffer[0] == 0xef {
+
+			r := Response{
+				uint(resp[3]),
+				uint(resp[5]<<8) + uint(resp[6]),
+			}
+			connection.ResponseChan <- r
+			fmt.Printf("%v \n", r)
+
 			for _, v := range resp {
 				fmt.Printf("%02x ", v)
 			}
@@ -99,7 +107,7 @@ func MakeSerialConnection(devname string, debug bool) (*Connection, error) {
 
 	connection := &Connection{
 		comms:        port,
-		ResponseChan: make(chan Response, 10),
+		ResponseChan: make(chan Response, 100),
 	}
 
 	if err == nil {
