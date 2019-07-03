@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"github.com/simulatedsimian/yx5300"
+	"github.com/0xcafed00d/yx5300"
 	"time"
 )
 
